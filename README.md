@@ -33,6 +33,7 @@
 </div>
 
 <div align="center">
+ᅠ ᅠ
 
 [<img src="https://cdn.discordapp.com/attachments/1133768987059163247/1143987202515288164/222_20230824011611.png" alt="sexy" width="300">](https://discord.gg/sVGcKgTnPN)
 
