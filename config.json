@@ -1,0 +1,24 @@
+{
+    "Cookie": "",
+    "Checking_cookie": "",
+    "Discord": {
+        "Bot": {
+            "Enabled": false,
+            "Prefix": "?",
+            "Token": "",
+            "Owner_Id": [
+                "765622654387879996"
+            ]
+        },
+        "Webhook": {
+            "Enabled": false,
+            "Url": ""
+        }
+    },
+    "Items": [
+        14067315845
+    ],
+    "GlobalLogs": {
+        "Enabled": true
+    }
+}
