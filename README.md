@@ -1,6 +1,11 @@
-<div align="center">
+<div width="100px">
 
 ![Cloud](https://cdn.discordapp.com/attachments/1133768987059163247/1135692497297883307/168_20230731215620.png)
+
+
+</div>
+
+<div align="center">
 
 # Cloud UGC Sniper
 
