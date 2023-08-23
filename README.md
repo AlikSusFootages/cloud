@@ -21,6 +21,10 @@
 
 </div>
 
-<div align="center" style="margin: 0 20px;">
+
+
+<div style="margin: 0 20px;">
+
 <strong>Cloud UGC Sniper</strong> is a sniper who catches limited items in the roblox catalog, with the help of this bot you can catch a lot of limited items, but do not forget that this is not legal, and there are very few limited items in the catalog
+
 </div>
