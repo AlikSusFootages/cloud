@@ -32,6 +32,6 @@
 
 <div align="center">
 
-  <h1>Join to our Discord Server!</h1>
+  <h2>Join to our Discord Server!</h2>
 
 </div>
