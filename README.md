@@ -39,4 +39,4 @@
 </div>
 
 
-<div style="background:#fff;"></div>
+<div width="100" height="100" style="background:#fff;"></div>
