@@ -28,7 +28,7 @@
 
   <h2>Join to our Discord Server!</h2>
 
-  <img src="https://cdn.discordapp.com/attachments/1133768987059163247/1140919528495251509/209_20230815140644.png" alt="discord">
+  <img src="https://cdn.discordapp.com/attachments/1133768987059163247/1140919528495251509/209_20230815140644.png" alt="discord" style="border-radius: 10px;">
 
 </div>
 
