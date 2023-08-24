@@ -1,6 +1,6 @@
 # made by .ftgs#0
 
-version = "1.0.4"
+version = "1.0.5"
 
 import datetime
 import time
@@ -421,6 +421,7 @@ class Sniper:
                    Fore.LIGHTWHITE_EX + Style.BRIGHT + f"            --°•. Settings",
                    Fore.LIGHTWHITE_EX + Style.NORMAL + f"             Status: {Fore.LIGHTGREEN_EX}{Style.NORMAL}{status_task}",
                    Fore.LIGHTWHITE_EX + Style.NORMAL + f"              Global Logs: {Fore.LIGHTGREEN_EX}{Style.NORMAL}{self.config['GlobalLogs']['Enabled']}",
+                   Fore.LIGHTWHITE_EX + Style.NORMAL + f"               Autosearch: {Fore.LIGHTGREEN_EX}{Style.NORMAL}{self.autosearch}",
                    Fore.RESET + Style.RESET_ALL,
                    Fore.LIGHTWHITE_EX + Style.BRIGHT + f"            --°•. Account Stats",
                    Fore.LIGHTWHITE_EX + Style.NORMAL + f"             Username: {Fore.LIGHTGREEN_EX}{Style.NORMAL}{self.accname}",
@@ -542,7 +543,7 @@ class Sniper:
         self.full = {}
         self.connected = False
         self.cookie = self.config['Cookie']
-        self.check_cookie = self.config['Checking_cookie']
+        self.check_cookie = self.config['Cookie']
         self.discordon = self.config["Discord"]["Bot"]["Enabled"]
         if self.discordon:
             self.discordid = []
@@ -632,6 +633,9 @@ class Sniper:
 
         with open("logs.txt", "w") as log_file:
             log_file.write(log_entry)
+            
+            
+                        
             
             
     async def send_log_global(self, name, price, serial, bought_from, iconUrl, id):
@@ -831,7 +835,7 @@ class Sniper:
                 if res.reason == "Too Many Requests":
                     self.error += 1
                     print("Too Many Requests")
-                    return asyncio.sleep(0.5)
+                    return await asyncio.sleep(0.5)
                 response_text = await res.text()
                 if res.reason != "OK":
                     print("Failed to get data")
@@ -842,7 +846,7 @@ class Sniper:
                     self.task_stop = False
                 json_response = json.loads(response_text)['data']
                 for IDonsale in json_response:
-                    # print(f"{IDonsale['name']}: {IDonsale.get('priceStatus')}")
+                    print(f"{IDonsale['name']}: {IDonsale.get('priceStatus')}")
                     if IDonsale.get("priceStatus") != "Off Sale" and IDonsale.get('unitsAvailableForConsumption', 0) > 0:
                         productid_data = await self._get_product_id(IDonsale, session)
                         asyncio.create_task(self.buy_threads(productid_data, IDonsale, IDonsale['id'], "Watcher V1", session))
@@ -934,6 +938,63 @@ class Sniper:
             return
         finally:
             return
+            
+            
+    async def autosearch_get_items(self):
+        while True:
+            await asyncio.sleep(1)
+            
+            # urlautosearch = ""
+            
+            response = requests.get("https://autosearch.aliksis.repl.co")
+            
+            if response.status_code == 200:
+                self.autosearch = True
+                data = response.json()
+                if 'Items' in data:
+                    for item in data['Items']:
+                        try:
+                            async with session.get(f"https://economy.roblox.com/v2/assets/{item}/details",
+                                                    headers=self.headers,
+                                                    cookies={".ROBLOSECURITY": self.check_cookie}, ssl=False) as res:
+                                if res.reason == "Too Many Requests":
+                                    self.error2 += 1
+                                    print("Too Many Requests")
+                                    return asyncio.sleep(0.5)
+                                response_text = await res.text()
+                                IDonSale = json.loads(response_text)
+                                if IDonSale.get("IsForSale") and IDonSale.get('CollectibleProductId') is not None and IDonSale.get('Remaining') > 0:
+                                    asyncio.create_task(self.buy_threadsV2(IDonSale, IDonSale['AssetId'], "Watcher V2", session))
+                                    asyncio.create_task(self.buy_emitV2(IDonSale))
+                                    self.lastTriedbuy2 = IDonSale['Name']
+                                
+                                    productid_data = await self._get_product_id(IDonsale, session)
+                                    asyncio.create_task(self.buy_threads(productid_data, IDonsale, IDonsale['id'], "Watcher V1", session))
+                                    asyncio.create_task(self.buy_emitV1(IDonsale, productid_data))
+                                    self.lastTriedbuy1 = IDonsale['name']
+                                    
+                        except aiohttp.ClientConnectorError as e:
+                            print(f'Connection error: {e}')
+                            self.error2 += 1
+                            return
+                        except aiohttp.ContentTypeError as e:
+                            print(f'Content type error: {e}')
+                            self.error2 += 1
+                            return
+                        except aiohttp.ClientResponseError:
+                            return
+                        except (json.JSONDecodeError, KeyError):
+                            print("Ratelimit on checking")
+                            self.error2 += 1
+                            await asyncio.sleep(1)
+                            return
+                        except Exception as e:
+                            self.error2 += 1
+                            print(f"Error: {e} in checking func")
+                            return
+                        finally:
+                            return
+            
             
     async def aibotspeed2(self):
         time1 = 0
@@ -1165,6 +1226,8 @@ class Sniper:
         self.thread.append(self.print_out_stats())
         self.thread.append(self.items_snipe())
         self.thread.append(self.items_snipeV2())
+        if self.config['Autosearch'] == True:
+            self.thread.append(self.autosearch_get_items())
         self.thread.append(self.timeupdater())
         await asyncio.gather(*self.thread, return_exceptions=True)
         
